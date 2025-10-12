@@ -29,6 +29,8 @@ class GS1BarcodeParser {
 
   final GS1BarcodeParserConfig _config;
 
+  static final _aiPattern = RegExp(r'^\d{2,4}$');
+
   GS1BarcodeParser._({
     required GS1BarcodeParserConfig config,
     required GS1CodeParser codeParser,
@@ -68,7 +70,12 @@ class GS1BarcodeParser {
   /// Parse barcode string
   GS1Barcode parse(String data, {CodeType? codeType}) {
     if (data.isEmpty) {
-      GS1DataException(message: 'Barcode is empty');
+      throw GS1DataException(message: 'Barcode is empty');
+    }
+
+    // Detect GS1 Digital Link URL (starts with http/https)
+    if (data.startsWith('http://') || data.startsWith('https://')) {
+      return _parseDigitalLink(data, codeType);
     }
 
     final codeWithRest = _codeParser(
@@ -103,7 +110,7 @@ class GS1BarcodeParser {
   AI? _getAI(String ai, [Map<String, AI> customAIs = const {}]) =>
       customAIs[ai] ?? AI.AIS[ai];
 
-  /// Get ans parse AI
+  /// Get and parse AI
   ParsedElementWithRest _identifyAI(String data,
       [Map<String, AI> customAIs = const {}]) {
     if (data.isEmpty) {
@@ -155,6 +162,82 @@ class GS1BarcodeParser {
       }
       return fnc1 + result;
     }
+  }
+
+  /// Internal: Parse GS1 Digital Link standard URL
+  /// Example: https://id.gs1.org/01/09506000134352/21/12345
+  GS1Barcode _parseDigitalLink(String url, CodeType? codeType) {
+    final uri = Uri.tryParse(url);
+    if (uri == null ||
+        (uri.pathSegments.isEmpty && uri.queryParameters.isEmpty)) {
+      throw GS1ParseException(message: 'Invalid GS1 Digital Link URL');
+    }
+
+    // Extract AI/value pairs directly without building intermediate string
+    final aiPairs = <String, String>{};
+    // Find all AI/value pairs in the path
+    final segments = uri.pathSegments;
+    int i = 0;
+    while (i < segments.length - 1) {
+      final ai = segments[i];
+      // GS1 AIs are typically 2-4 digits
+      if (_aiPattern.hasMatch(ai)) {
+        final value = segments[i + 1];
+        aiPairs[ai] = value;
+        i += 2;
+      } else {
+        i += 1;
+      }
+    }
+
+    // Also extract AI/value pairs from query parameters
+    uri.queryParameters.forEach((key, value) {
+      if (_aiPattern.hasMatch(key) && value.isNotEmpty) {
+        aiPairs[key] = value;
+      }
+    });
+
+    if (aiPairs.isEmpty) {
+      throw GS1ParseException(message: 'No GS1 data found in Digital Link URL');
+    }
+
+    // Parse AI pairs directly into elements
+    return _parseAIPairs(aiPairs, codeType);
+  }
+
+  /// Internal: Parse AI key-value pairs directly into GS1Barcode
+  GS1Barcode _parseAIPairs(Map<String, String> aiPairs, CodeType? codeType) {
+    final elements = <String, GS1ParsedElement>{};
+
+    // Process each AI/value pair directly
+    aiPairs.forEach((aiCode, value) {
+      final ai = _getAI(aiCode, _config.customAIs);
+      if (ai == null) {
+        throw GS1ParseException(message: 'AI not found for $aiCode');
+      }
+
+      final parser = _elementParsers[ai.type];
+      if (parser == null) {
+        throw GS1ParseException(
+            message: 'Parser not found for AI $aiCode [type:${ai.type}]');
+      }
+      // Create barcode data string for this specific AI to use existing parsers
+      final aiData = '$aiCode$value';
+      final res = parser(aiData, ai, _config);
+      elements.putIfAbsent(res.element.aiCode, () => res.element);
+    });
+
+    // Use provided codeType but always use "GS1 Digital Link" title
+    final code = Code(
+      type: codeType ?? CodeType.UNDEFINED,
+      codeTitle: 'GS1 Digital Link',
+      fnc1: codeType != null ? (Code.CODES[codeType]?.fnc1 ?? '') : '',
+    );
+
+    return GS1Barcode(
+      code: code,
+      elements: elements,
+    );
   }
 }
 
