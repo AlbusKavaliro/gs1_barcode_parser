@@ -18,6 +18,9 @@ class ParsedElementWithRest {
 abstract class GS1ElementParser {
   ParsedElementWithRest call(String data, AI ai, GS1BarcodeParserConfig config);
 
+  GS1ParsedElement parseFromParts(
+      String aiCode, String value, AI ai, GS1BarcodeParserConfig config);
+
   bool verify(String elementData, AI ai) {
     return ai.regExp.hasMatch(elementData);
   }
@@ -51,18 +54,34 @@ class GS1DateParser extends GS1ElementParser {
     }
 
     final elementDate = elementStr.substring(ai.code.length);
-    var year = _year2ToYear4(int.parse(elementDate.substring(0, 2), radix: 10));
-    final month = int.parse(elementDate.substring(2, 4), radix: 10);
-    final day = int.parse(elementDate.substring(4), radix: 10);
-
-    final element = GS1ParsedElement<DateTime>(
-      rawData: elementDate,
-      aiCode: ai.code,
-      data: DateTime(year, month, day),
-    );
+    final element = parseFromParts(ai.code, elementDate, ai, config);
 
     final rest = getRest(data, offset, config);
     return ParsedElementWithRest(element: element, rest: rest);
+  }
+
+  @override
+  GS1ParsedElement parseFromParts(
+      String aiCode, String value, AI ai, GS1BarcodeParserConfig config) {
+    if (value.length != ai.fixLength) {
+      throw GS1ParseException(
+          message:
+              'Invalid date length for AI $aiCode: expected ${ai.fixLength}, got ${value.length}');
+    }
+
+    if (value.length < 6) {
+      throw GS1ParseException(message: 'Date value too short for AI $aiCode');
+    }
+
+    var year = _year2ToYear4(int.parse(value.substring(0, 2), radix: 10));
+    final month = int.parse(value.substring(2, 4), radix: 10);
+    final day = int.parse(value.substring(4), radix: 10);
+
+    return GS1ParsedElement<DateTime>(
+      rawData: value,
+      aiCode: aiCode,
+      data: DateTime(year, month, day),
+    );
   }
 
   _year2ToYear4(int year) {
@@ -84,7 +103,16 @@ class GS1DateTimeParser extends GS1ElementParser {
     }
 
     final rawData = elementStr.substring(ai.code.length);
-    final elementDateTime = rawData.padRight(12, '0');
+    final element = parseFromParts(ai.code, rawData, ai, config);
+
+    final rest = getRest(data, offset, config);
+    return ParsedElementWithRest(element: element, rest: rest);
+  }
+
+  @override
+  GS1ParsedElement parseFromParts(
+      String aiCode, String value, AI ai, GS1BarcodeParserConfig config) {
+    final elementDateTime = value.padRight(12, '0');
     var year =
         _year2ToYear4(int.parse(elementDateTime.substring(0, 2), radix: 10));
     final month = int.parse(elementDateTime.substring(2, 4), radix: 10);
@@ -93,14 +121,11 @@ class GS1DateTimeParser extends GS1ElementParser {
     final minute = int.parse(elementDateTime.substring(8, 10), radix: 10);
     final second = int.parse(elementDateTime.substring(10), radix: 10);
 
-    final element = GS1ParsedElement<DateTime>(
-      rawData: rawData,
-      aiCode: ai.code,
+    return GS1ParsedElement<DateTime>(
+      rawData: value,
+      aiCode: aiCode,
       data: DateTime(year, month, day, hour, minute, second),
     );
-
-    final rest = getRest(data, offset, config);
-    return ParsedElementWithRest(element: element, rest: rest);
   }
 
   _year2ToYear4(int year) {
@@ -121,15 +146,26 @@ class GS1ElementFixLengthParser extends GS1ElementParser {
           message: 'Data format mismatch ${ai.regExp} for AI ${ai.code}');
     }
     final elementValue = elementStr.substring(ai.code.length);
-
-    final element = GS1ParsedElement<String>(
-      rawData: elementValue,
-      aiCode: ai.code,
-      data: elementValue,
-    );
+    final element = parseFromParts(ai.code, elementValue, ai, config);
     final rest = getRest(data, offset, config);
 
     return ParsedElementWithRest(element: element, rest: rest);
+  }
+
+  @override
+  GS1ParsedElement parseFromParts(
+      String aiCode, String value, AI ai, GS1BarcodeParserConfig config) {
+    if (value.length != ai.fixLength) {
+      throw GS1ParseException(
+          message:
+              'Fixed length mismatch for AI $aiCode: expected ${ai.fixLength}, got ${value.length}');
+    }
+
+    return GS1ParsedElement<String>(
+      rawData: value,
+      aiCode: aiCode,
+      data: value,
+    );
   }
 }
 
@@ -147,14 +183,27 @@ class GS1ElementFixLengthMeasureParser extends GS1ElementParser {
     }
 
     final elementValue = elementStr.substring(ai.code.length);
-
-    final element = GS1ParsedElement<double>(
-        rawData: elementValue,
-        aiCode: ai.code,
-        data: parseFloatingPoint(elementValue, ai.numberOfDecimalPlaces));
+    final element = parseFromParts(ai.code, elementValue, ai, config);
     final rest = getRest(data, offset, config);
 
     return ParsedElementWithRest(element: element, rest: rest);
+  }
+
+  @override
+  GS1ParsedElement parseFromParts(
+      String aiCode, String value, AI ai, GS1BarcodeParserConfig config) {
+    if (value.isEmpty) {
+      throw GS1ParseException(message: 'Empty measure value for AI $aiCode');
+    }
+    if (value.length != ai.fixLength) {
+      throw GS1ParseException(
+          message:
+              'Fixed length mismatch for AI $aiCode: expected ${ai.fixLength}, got ${value.length}');
+    }
+
+    final doubleValue = parseFloatingPoint(value, ai.numberOfDecimalPlaces);
+    return GS1ParsedElement<double>(
+        rawData: value, aiCode: aiCode, data: doubleValue);
   }
 }
 
@@ -172,17 +221,22 @@ class GS1VariableLengthParser extends GS1ElementParser {
     }
 
     final elementValue = elementStr.substring(ai.code.length);
-
-    final element = GS1ParsedElement<String>(
-      aiCode: ai.code,
-      rawData: elementValue,
-      data: elementValue,
-    );
+    final element = parseFromParts(ai.code, elementValue, ai, config);
     final rest = getRest(data, offset, config);
 
     return ParsedElementWithRest(
       element: element,
       rest: rest,
+    );
+  }
+
+  @override
+  GS1ParsedElement parseFromParts(
+      String aiCode, String value, AI ai, GS1BarcodeParserConfig config) {
+    return GS1ParsedElement<String>(
+      aiCode: aiCode,
+      rawData: value,
+      data: value,
     );
   }
 }
@@ -201,12 +255,21 @@ class GS1VariableLengthMeasureParser extends GS1ElementParser {
     }
 
     final numberPart = data.substring(ai.code.length, offset);
+    final element = parseFromParts(ai.code, numberPart, ai, config);
     final rest = getRest(data, offset, config);
-    final element = GS1ParsedElement<double>(
-        rawData: numberPart,
-        aiCode: ai.code,
-        data: parseFloatingPoint(numberPart, ai.numberOfDecimalPlaces));
     return ParsedElementWithRest(element: element, rest: rest);
+  }
+
+  @override
+  GS1ParsedElement parseFromParts(
+      String aiCode, String value, AI ai, GS1BarcodeParserConfig config) {
+    if (value.isEmpty) {
+      throw GS1ParseException(message: 'Empty measure value for AI $aiCode');
+    }
+
+    final doubleValue = parseFloatingPoint(value, ai.numberOfDecimalPlaces);
+    return GS1ParsedElement<double>(
+        rawData: value, aiCode: aiCode, data: doubleValue);
   }
 }
 
@@ -223,17 +286,27 @@ class GS1VariableLengthWithISONumbersParser extends GS1ElementParser {
           message: 'Data format mismatch ${ai.regExp} for AI ${ai.code}');
     }
 
-    final numberPart = elementStr.substring(ai.code.length + 3);
-    final isoPart = elementStr.substring(ai.code.length, ai.code.length + 3);
-
+    final rawValue = elementStr.substring(ai.code.length);
+    final element = parseFromParts(ai.code, rawValue, ai, config);
     final rest = getRest(data, offset, config);
-    final element = GS1ParsedElement<double>(
-        rawData: elementStr.substring(ai.code.length),
-        aiCode: ai.code,
-        iso: isoPart,
-        data: parseFloatingPoint(numberPart, ai.numberOfDecimalPlaces));
 
     return ParsedElementWithRest(element: element, rest: rest);
+  }
+
+  @override
+  GS1ParsedElement parseFromParts(
+      String aiCode, String value, AI ai, GS1BarcodeParserConfig config) {
+    if (value.length < 3) {
+      throw GS1ParseException(
+          message: 'Value too short for ISO numbers AI $aiCode');
+    }
+
+    final isoPart = value.substring(0, 3);
+    final numberPart = value.substring(3);
+    final doubleValue =
+        parseFloatingPoint(numberPart, ai.numberOfDecimalPlaces);
+    return GS1ParsedElement<double>(
+        rawData: value, aiCode: aiCode, iso: isoPart, data: doubleValue);
   }
 }
 
@@ -250,17 +323,29 @@ class GS1VariableLengthWithISOCharsParser extends GS1ElementParser {
           message: 'Data format mismatch ${ai.regExp} for AI ${ai.code}');
     }
 
-    final charPart = elementStr.substring(ai.code.length + 3);
-    final isoPart = elementStr.substring(ai.code.length, ai.code.length + 3);
-
+    final rawValue = elementStr.substring(ai.code.length);
+    final element = parseFromParts(ai.code, rawValue, ai, config);
     final rest = getRest(data, offset, config);
-    final element = GS1ParsedElement<String>(
-      rawData: elementStr.substring(ai.code.length),
-      aiCode: ai.code,
+
+    return ParsedElementWithRest(element: element, rest: rest);
+  }
+
+  @override
+  GS1ParsedElement parseFromParts(
+      String aiCode, String value, AI ai, GS1BarcodeParserConfig config) {
+    if (value.length < 3) {
+      throw GS1ParseException(
+          message: 'Value too short for ISO chars AI $aiCode');
+    }
+
+    final isoPart = value.substring(0, 3);
+    final charPart = value.substring(3);
+
+    return GS1ParsedElement<String>(
+      rawData: value,
+      aiCode: aiCode,
       iso: isoPart,
       data: charPart,
     );
-
-    return ParsedElementWithRest(element: element, rest: rest);
   }
 }

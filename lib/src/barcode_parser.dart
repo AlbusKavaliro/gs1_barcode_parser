@@ -221,10 +221,9 @@ class GS1BarcodeParser {
         throw GS1ParseException(
             message: 'Parser not found for AI $aiCode [type:${ai.type}]');
       }
-      // Create barcode data string for this specific AI to use existing parsers
-      final aiData = '$aiCode$value';
-      final res = parser(aiData, ai, _config);
-      elements.putIfAbsent(res.element.aiCode, () => res.element);
+
+      final element = parser.parseFromParts(aiCode, value, ai, _config);
+      elements.putIfAbsent(element.aiCode, () => element);
     });
 
     // Use provided codeType but always use "GS1 Digital Link" title
