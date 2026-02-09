@@ -66,7 +66,7 @@ class GS1BarcodeParser {
   }
 
   /// Parse barcode string
-  GS1Barcode parse(String data, {CodeType? codeType}) {
+  GS1Barcode parse(String data, {CodeType? codeType, bool ignoreUnknownAIs = false}) {
     if (data.isEmpty) {
       GS1DataException(message: 'Barcode is empty');
     }
@@ -88,7 +88,19 @@ class GS1BarcodeParser {
     final elements = <String, GS1ParsedElement>{};
 
     while (restOfBarcode.isNotEmpty) {
-      final res = _identifyAI(restOfBarcode, _config.customAIs);
+      final res = _identifyAI(restOfBarcode, ignoreUnknownAIs, _config.customAIs);
+      if (res == null) {
+        final int nextSeparator = restOfBarcode.indexOf(_config.groupSeparator, 1);
+        if (nextSeparator == -1) {
+          return GS1Barcode(
+            code: codeWithRest.code,
+            elements: elements,
+          );
+        } else {
+          restOfBarcode = restOfBarcode.substring(nextSeparator + 1);
+          continue;
+        }
+      }
       elements.putIfAbsent(res.element.aiCode, () => res.element);
       restOfBarcode = res.rest;
     }
@@ -104,7 +116,7 @@ class GS1BarcodeParser {
       customAIs[ai] ?? AI.AIS[ai];
 
   /// Get ans parse AI
-  ParsedElementWithRest _identifyAI(String data,
+  ParsedElementWithRest? _identifyAI(String data, bool ignoreUnknownAIs,
       [Map<String, AI> customAIs = const {}]) {
     if (data.isEmpty) {
       throw GS1ParseException(message: 'AI not found for $data. AI is empty');
@@ -127,6 +139,10 @@ class GS1BarcodeParser {
       ai = _getAI(fourNumber, customAIs);
     }
     if (ai == null) {
+      if (ignoreUnknownAIs) {
+        return null;
+      }
+
       throw GS1ParseException(message: 'AI not found for $data');
     }
 
