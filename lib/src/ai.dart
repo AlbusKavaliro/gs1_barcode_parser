@@ -250,9 +250,9 @@ class AI {
       description: 'GLN extension component',
     ),
     '255': const AI(
-      code: '253',
+      code: '255',
       type: AIFormatType.VARIABLE_LENGTH_MEASURE,
-      dataTitle: '255',
+      dataTitle: 'GCN',
       regExpString: r'^255(\d{13})(\d{0,12})$',
       description: 'Global Coupon Number (GCN)',
     ),

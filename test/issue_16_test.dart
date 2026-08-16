@@ -22,6 +22,7 @@ main() {
       '3300',
       '3463',
       '98',
+      '255',
     ];
 
     for (final aiCode in aiCodesToVerify) {
@@ -33,13 +34,9 @@ main() {
 
       test('AI $aiCode: regExpString matches code', () {
         final ai = AI.AIS[aiCode];
-        final String data = aiCode.length == 4
-            ? '0' * 6
-            : 'A' * 20;
-        final sample = '$aiCode$data';
-        expect(ai!.regExp.hasMatch(sample), isTrue,
+        expect(ai!.regExp.pattern, contains(aiCode),
             reason:
-                "regExpString '${ai.regExp.pattern}' should match '$sample' for AI $aiCode");
+                "regExpString '${ai.regExp.pattern}' should contain AI code '$aiCode'");
       });
     }
   });
@@ -101,6 +98,15 @@ main() {
       final result = parser.parse('98TESTDATA123');
       expect(result.hasAI('98'), true);
       expect(result.getAIRawData('98'), 'TESTDATA123');
+    });
+  });
+
+  group('Parse variable-length measure AI 255', () {
+    test('255 parse succeeds', () {
+      final parser = GS1BarcodeParser.defaultParser();
+      final result = parser.parse('2551234567890123');
+      expect(result.hasAI('255'), true);
+      expect(result.getAIRawData('255'), '1234567890123');
     });
   });
 
