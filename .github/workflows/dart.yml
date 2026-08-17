@@ -39,7 +39,7 @@ jobs:
       - uses: dart-lang/setup-dart@7654d458321ee25acccccfdb86cd48bd95768ff1 #v1.8.0
 
       - name: Install dependencies
-        run: dart pub get
+        run: dart pub get --enforce-lockfile
 
       # Uncomment this step to verify the use of 'dart format' on each commit.
       # - name: Verify formatting
