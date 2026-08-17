@@ -278,4 +278,55 @@ main() {
           'Test1234Test5678Test1234Test5678Test1234Test');
     });
   });
+
+  group('GS1 Digital Link parsing', () {
+    final parser = GS1BarcodeParser.defaultParser();
+
+    test('GS1 Digital Link with path AIs only', () {
+      // Official sample: https://id.gs1.org/01/09506000134352/21/12345
+      final url = 'https://id.gs1.org/01/09506000134352/21/12345';
+      final result = parser.parse(url);
+      expect(result.hasAI('01'), true);
+      expect(result.getAIRawData('01'), '09506000134352');
+      expect(result.hasAI('21'), true);
+      expect(result.getAIRawData('21'), '12345');
+    });
+
+    test('GS1 Digital Link with path and query AIs', () {
+      // Official sample: https://id.gs1.org/01/09506000134376/10/ABC/21/12345?17=231231
+      final url =
+          'https://id.gs1.org/01/09506000134376/10/ABC/21/12345?17=231231';
+      final result = parser.parse(url);
+      expect(result.hasAI('01'), true);
+      expect(result.getAIRawData('01'), '09506000134376');
+      expect(result.hasAI('10'), true);
+      expect(result.getAIRawData('10'), 'ABC');
+      expect(result.hasAI('21'), true);
+      expect(result.getAIRawData('21'), '12345');
+      expect(result.hasAI('17'), true);
+      expect(result.getAIRawData('17'), '231231');
+    });
+
+    test('GS1 Digital Link with sub-path and query', () {
+      // Official sample: https://example.com/some/path/01/12345678901231/21/ABC?10=LOT123
+      final url =
+          'https://example.com/some/path/01/12345678901231/21/ABC?10=LOT123';
+      final result = parser.parse(url);
+      expect(result.hasAI('01'), true);
+      expect(result.getAIRawData('01'), '12345678901231');
+      expect(result.hasAI('21'), true);
+      expect(result.getAIRawData('21'), 'ABC');
+      expect(result.hasAI('10'), true);
+      expect(result.getAIRawData('10'), 'LOT123');
+    });
+
+    test('GS1 Digital Link with explicit codeType', () {
+      final url = 'https://id.gs1.org/01/09506000134352/21/12345';
+      final result = parser.parse(url, codeType: CodeType.QR_CODE);
+      expect(result.code.type, CodeType.QR_CODE);
+      expect(result.code.codeTitle, 'GS1 Digital Link');
+      expect(result.hasAI('01'), true);
+      expect(result.getAIRawData('01'), '09506000134352');
+    });
+  });
 }
