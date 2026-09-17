@@ -1,3 +1,9 @@
+## [1.2.0]
+* feat: Add GS1 Digital Link parsing support
+* refactor: Simplify element parsing by introducing parseFromParts method 
+* feat: Add feature ignore unknown AIs (thanks https://github.com/RafaRuiz)
+* fix: AI mapping typos
+
 ## [1.1.2]
 * Fixed AIs (8001, 8002, 8003, 8004, 8007, 8008) (see issue_13_test.dart)
   
