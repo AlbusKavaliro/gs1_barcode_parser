@@ -35,9 +35,9 @@ class GS1BarcodeParser {
     required GS1BarcodeParserConfig config,
     required GS1CodeParser codeParser,
     required Map<AIFormatType, GS1ElementParser> elementParsers,
-  }) : _config = config,
-       _elementParsers = elementParsers,
-       _codeParser = codeParser;
+  })  : _config = config,
+        _elementParsers = elementParsers,
+        _codeParser = codeParser;
 
   /// Create parser with default config
   factory GS1BarcodeParser.defaultParser() {
@@ -310,10 +310,10 @@ class GS1Barcode {
 
   /// Get all parsed AI elements data
   Map<String, dynamic> get getAIsData => elements.values.fold(
-    {},
-    (previousValue, element) =>
-        previousValue..putIfAbsent(element.aiCode, () => element.data),
-  );
+        {},
+        (previousValue, element) =>
+            previousValue..putIfAbsent(element.aiCode, () => element.data),
+      );
 
   /// Get all AI elements
   Map<String, GS1ParsedElement> get getAIsParsedElement =>
