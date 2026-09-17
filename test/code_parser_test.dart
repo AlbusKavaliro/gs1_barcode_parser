@@ -1,5 +1,5 @@
-import 'package:gs1_barcode_parser/src/code.dart';
-import 'package:gs1_barcode_parser/src/code_parser.dart';
+import 'package:gs1_barcode_parser_plus/src/code.dart';
+import 'package:gs1_barcode_parser_plus/src/code_parser.dart';
 import 'package:test/test.dart';
 
 main() {

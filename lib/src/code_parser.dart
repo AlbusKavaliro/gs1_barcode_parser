@@ -1,4 +1,4 @@
-import 'package:gs1_barcode_parser/src/code.dart';
+import 'package:gs1_barcode_parser_plus/src/code.dart';
 
 class CodeWithRest {
   final Code code;
