@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:gs1_barcode_parser/src/ai.dart';
-import 'package:gs1_barcode_parser/src/barcode_parser.dart';
+import 'package:gs1_barcode_parser_plus/src/ai.dart';
+import 'package:gs1_barcode_parser_plus/src/barcode_parser.dart';
 
 import 'exception.dart';
 
