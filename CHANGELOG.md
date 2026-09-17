@@ -3,6 +3,7 @@
 * refactor: Simplify element parsing by introducing parseFromParts method 
 * feat: Add feature ignore unknown AIs (thanks https://github.com/RafaRuiz)
 * fix: AI mapping typos
+* fix: Export exceptions
 
 ## [1.1.2]
 * Fixed AIs (8001, 8002, 8003, 8004, 8007, 8008) (see issue_13_test.dart)
