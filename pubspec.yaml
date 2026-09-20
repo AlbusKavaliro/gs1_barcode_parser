@@ -1,7 +1,7 @@
 name: gs1_barcode_parser_plus
 description: The barcode parser is a library for handling the contents of GS1 barcodes.
 version: 1.2.0
-homepage: https://github.com/AlbusKavaliro/gs1_barcode_parser_plus
+homepage: https://github.com/AlbusKavaliro/gs1_barcode_parser
 
 environment:
   sdk: ">=2.12.0 <4.0.0"
