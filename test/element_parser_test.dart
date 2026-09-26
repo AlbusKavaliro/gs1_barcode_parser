@@ -13,8 +13,8 @@ main() {
     final fixLengthParser = GS1ElementFixLengthParser();
 
     test('Fixed length element successful parsed', () {
-      final elementWithRest =
-          fixLengthParser(gs1WithoutFNC1, AI.AIS['01'] as AI, config);
+      final elementWithRest = fixLengthParser(
+          gs1WithoutFNC1, AI.applicationIdentifiers['01'] as AI, config);
       expect(elementWithRest.rest, equals('1719112510ABCD1234'));
       expect(elementWithRest.element.data, equals('03453120000011'));
       expect(elementWithRest.element.aiCode, equals('01'));
@@ -23,8 +23,8 @@ main() {
 
     test('Fixed length element failed parse short data', () {
       expect(
-          () => fixLengthParser(
-              gs1WithoutFNC1Truncated, AI.AIS['01'] as AI, config),
+          () => fixLengthParser(gs1WithoutFNC1Truncated,
+              AI.applicationIdentifiers['01'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -33,7 +33,8 @@ main() {
 
     test('Fixed length element failed parse mismatched data an AI', () {
       expect(
-          () => fixLengthParser(gs1WithoutFNC1, AI.AIS['02'] as AI, config),
+          () => fixLengthParser(
+              gs1WithoutFNC1, AI.applicationIdentifiers['02'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -42,8 +43,8 @@ main() {
 
     test('Fixed length element failed parse with the wrong format', () {
       expect(
-          () => fixLengthParser(
-              gs1WithoutUnformatted, AI.AIS['01'] as AI, config),
+          () => fixLengthParser(gs1WithoutUnformatted,
+              AI.applicationIdentifiers['01'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -58,8 +59,8 @@ main() {
     final String gs1WithoutFNC1Truncated = '17150';
 
     test('Date element successful parsed', () {
-      final elementWithRest =
-          dateParser(gs1WithoutFNC1, AI.AIS['17'] as AI, config);
+      final elementWithRest = dateParser(
+          gs1WithoutFNC1, AI.applicationIdentifiers['17'] as AI, config);
       expect(elementWithRest.rest, equals('10ABC12339329714711'));
       expect(elementWithRest.element.data, equals(DateTime(2015, 1, 29)));
       expect(elementWithRest.element.rawData, equals('150129'));
@@ -68,7 +69,8 @@ main() {
 
     test('Date element failed parse short data', () {
       expect(
-          () => dateParser(gs1WithoutFNC1Truncated, AI.AIS['17'] as AI, config),
+          () => dateParser(gs1WithoutFNC1Truncated,
+              AI.applicationIdentifiers['17'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -77,7 +79,8 @@ main() {
 
     test('Fixed length element failed parse mismatched data an AI', () {
       expect(
-          () => dateParser(gs1WithoutFNC1, AI.AIS['16'] as AI, config),
+          () => dateParser(
+              gs1WithoutFNC1, AI.applicationIdentifiers['16'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -86,7 +89,8 @@ main() {
 
     test('Fixed length element failed parse with the wrong format', () {
       expect(
-          () => dateParser(gs1WithoutUnformatted, AI.AIS['17'] as AI, config),
+          () => dateParser(gs1WithoutUnformatted,
+              AI.applicationIdentifiers['17'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -101,8 +105,8 @@ main() {
     final String gs1WithoutFNC1Truncated = '1039329714711';
 
     test('Variable length element successful parsed', () {
-      final elementWithRest =
-          variableLengthParser(gs1WithoutFNC1, AI.AIS['10'] as AI, config);
+      final elementWithRest = variableLengthParser(
+          gs1WithoutFNC1, AI.applicationIdentifiers['10'] as AI, config);
       expect(elementWithRest.rest, equals('39329714711'));
       expect(elementWithRest.element.data, equals('ABC123'));
       expect(elementWithRest.element.rawData, equals('ABC123'));
@@ -110,8 +114,8 @@ main() {
     });
 
     test('Variable length empty element successful parsed', () {
-      final elementWithRest = variableLengthParser(
-          gs1WithoutFNC1Truncated, AI.AIS['10'] as AI, config);
+      final elementWithRest = variableLengthParser(gs1WithoutFNC1Truncated,
+          AI.applicationIdentifiers['10'] as AI, config);
       expect(elementWithRest.rest, equals('39329714711'));
       expect(elementWithRest.element.data, equals(''));
       expect(elementWithRest.element.rawData, equals(''));
@@ -120,8 +124,8 @@ main() {
 
     test('Variable length  element failed parse mismatched data an AI', () {
       expect(
-          () =>
-              variableLengthParser(gs1WithoutFNC1, AI.AIS['21'] as AI, config),
+          () => variableLengthParser(
+              gs1WithoutFNC1, AI.applicationIdentifiers['21'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -130,8 +134,8 @@ main() {
 
     test('Variable length element failed parse with the wrong format', () {
       expect(
-          () => variableLengthParser(
-              gs1WithoutUnformatted, AI.AIS['10'] as AI, config),
+          () => variableLengthParser(gs1WithoutUnformatted,
+              AI.applicationIdentifiers['10'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -146,8 +150,8 @@ main() {
     final String gs1WithoutFNC1Truncated = '310300';
 
     test('Variable length element successful parsed', () {
-      final elementWithRest =
-          fixLengthMeasureParser(gs1WithoutFNC1, AI.AIS['3103'] as AI, config);
+      final elementWithRest = fixLengthMeasureParser(
+          gs1WithoutFNC1, AI.applicationIdentifiers['3103'] as AI, config);
       expect(elementWithRest.rest, equals('3922471142127649716'));
       expect(elementWithRest.element.data, equals(0.525));
       expect(elementWithRest.element.rawData, equals('000525'));
@@ -156,8 +160,8 @@ main() {
 
     test('Fixed length measure  element failed parse short data', () {
       expect(
-          () => fixLengthMeasureParser(
-              gs1WithoutFNC1Truncated, AI.AIS['3103'] as AI, config),
+          () => fixLengthMeasureParser(gs1WithoutFNC1Truncated,
+              AI.applicationIdentifiers['3103'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -167,7 +171,7 @@ main() {
     test('Fixed length measure element failed parse mismatched data an AI', () {
       expect(
           () => fixLengthMeasureParser(
-              gs1WithoutFNC1, AI.AIS['3102'] as AI, config),
+              gs1WithoutFNC1, AI.applicationIdentifiers['3102'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -176,8 +180,8 @@ main() {
 
     test('Fixed length measure element failed parse with the wrong format', () {
       expect(
-          () => fixLengthMeasureParser(
-              gs1WithoutUnformatted, AI.AIS['3103'] as AI, config),
+          () => fixLengthMeasureParser(gs1WithoutUnformatted,
+              AI.applicationIdentifiers['3103'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -197,7 +201,7 @@ main() {
 
     test('Variable length with ISO number element successful parsed', () {
       final elementWithRest = variableLengthWithISONumbersParser(
-          gs1WithoutFNC1, AI.AIS['3932'] as AI, config);
+          gs1WithoutFNC1, AI.applicationIdentifiers['3932'] as AI, config);
       expect(elementWithRest.rest, equals('31030005253922471142127649716'));
       expect(elementWithRest.element.data, equals(47.11));
       expect(elementWithRest.element.rawData, equals('9714711'));
@@ -207,8 +211,8 @@ main() {
 
     test('Variable length with ISO number element failed parse short data', () {
       expect(
-          () => variableLengthWithISONumbersParser(
-              gs1WithoutFNC1Truncated, AI.AIS['3932'] as AI, config),
+          () => variableLengthWithISONumbersParser(gs1WithoutFNC1Truncated,
+              AI.applicationIdentifiers['3932'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -220,7 +224,7 @@ main() {
         () {
       expect(
           () => variableLengthWithISONumbersParser(
-              gs1WithoutFNC1, AI.AIS['3933'] as AI, config),
+              gs1WithoutFNC1, AI.applicationIdentifiers['3933'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -231,8 +235,8 @@ main() {
         'Variable length with ISO number element failed parse with the wrong format',
         () {
       expect(
-          () => variableLengthWithISONumbersParser(
-              gs1WithoutUnformatted, AI.AIS['3933'] as AI, config),
+          () => variableLengthWithISONumbersParser(gs1WithoutUnformatted,
+              AI.applicationIdentifiers['3933'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -243,8 +247,8 @@ main() {
         'Variable length with ISO number element failed parse with the wrong format 2',
         () {
       expect(
-          () => variableLengthWithISONumbersParser(
-              gs1WithoutUnformatted2, AI.AIS['3933'] as AI, config),
+          () => variableLengthWithISONumbersParser(gs1WithoutUnformatted2,
+              AI.applicationIdentifiers['3933'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -264,7 +268,7 @@ main() {
 
     test('Variable length with ISO chars element successful parsed', () {
       final elementWithRest = variableLengthWithISOCharsParser(
-          gs1WithoutFNC1, AI.AIS['421'] as AI, config);
+          gs1WithoutFNC1, AI.applicationIdentifiers['421'] as AI, config);
       expect(elementWithRest.rest, equals('31030005253922471142127649716'));
       expect(elementWithRest.element.data, equals('49716'));
       expect(elementWithRest.element.rawData, equals('27649716'));
@@ -274,8 +278,8 @@ main() {
 
     test('Variable length with ISO chars  element failed parse short data', () {
       expect(
-          () => variableLengthWithISOCharsParser(
-              gs1WithoutFNC1Truncated, AI.AIS['421'] as AI, config),
+          () => variableLengthWithISOCharsParser(gs1WithoutFNC1Truncated,
+              AI.applicationIdentifiers['421'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -287,7 +291,7 @@ main() {
         () {
       expect(
           () => variableLengthWithISOCharsParser(
-              gs1WithoutFNC1, AI.AIS['10'] as AI, config),
+              gs1WithoutFNC1, AI.applicationIdentifiers['10'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -298,8 +302,8 @@ main() {
         'Variable length with ISO chars  element failed parse with the wrong format',
         () {
       expect(
-          () => variableLengthWithISOCharsParser(
-              gs1WithoutUnformatted, AI.AIS['421'] as AI, config),
+          () => variableLengthWithISOCharsParser(gs1WithoutUnformatted,
+              AI.applicationIdentifiers['421'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==
@@ -310,8 +314,8 @@ main() {
         'Variable length with ISO chars  element failed parse with the wrong format 2',
         () {
       expect(
-          () => variableLengthWithISOCharsParser(
-              gs1WithoutUnformatted2, AI.AIS['421'] as AI, config),
+          () => variableLengthWithISOCharsParser(gs1WithoutUnformatted2,
+              AI.applicationIdentifiers['421'] as AI, config),
           throwsA(predicate((e) =>
               e is GS1ParseException &&
               e.message ==

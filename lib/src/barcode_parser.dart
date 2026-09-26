@@ -123,7 +123,7 @@ class GS1BarcodeParser {
 
   /// get AIs
   AI? _getAI(String ai, [Map<String, AI> customAIs = const {}]) =>
-      customAIs[ai] ?? AI.AIS[ai];
+      customAIs[ai] ?? AI.applicationIdentifiers[ai];
 
   /// Get and parse AI
   ParsedElementWithRest? _identifyAI(
@@ -294,7 +294,7 @@ class GS1Barcode {
   const GS1Barcode({required this.code, required this.elements});
 
   /// Get available AIs
-  Iterable<String> get AIs => elements.keys;
+  Iterable<String> get applicationIdentifiers => elements.keys;
 
   /// Checking for availability AI
   bool hasAI(String ai) => elements.containsKey(ai);
@@ -337,7 +337,7 @@ class GS1Barcode {
       '',
       (String previousValue, element) =>
           previousValue +
-          '${element.key} (${AI.AIS[element.key]!.dataTitle}): ${element.value.data},\n',
+          '${element.key} (${AI.applicationIdentifiers[element.key]!.dataTitle}): ${element.value.data},\n',
     );
     return 'code = ${code.codeTitle},\ndata = {\n$elem}';
   }

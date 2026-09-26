@@ -25,13 +25,13 @@ main() {
 
     for (final aiCode in aiCodesToVerify) {
       test('AI $aiCode: code field matches map key', () {
-        final ai = AI.AIS[aiCode];
+        final ai = AI.applicationIdentifiers[aiCode];
         expect(ai, isNotNull);
         expect(ai!.code, equals(aiCode));
       });
 
       test('AI $aiCode: regExpString matches code', () {
-        final ai = AI.AIS[aiCode];
+        final ai = AI.applicationIdentifiers[aiCode];
         expect(ai!.regExp.pattern, contains(aiCode),
             reason:
                 "regExpString '${ai.regExp.pattern}' should contain AI code '$aiCode'");

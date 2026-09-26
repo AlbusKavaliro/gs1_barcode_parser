@@ -83,7 +83,7 @@ class AI {
   }
 
   /// AIs List
-  static final Map<String, AI> AIS = {
+  static final Map<String, AI> applicationIdentifiers = {
     '00': const AI(
       code: '00',
       fixLength: 18,
