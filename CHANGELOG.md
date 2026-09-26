@@ -1,3 +1,7 @@
+## [1.2.1]
+* docs: Update homepage URL in pubspec
+* refactor: Rename private variables for owerCamelCase SAST
+
 ## [1.2.0]
 * feat: Add GS1 Digital Link parsing support
 * refactor: Simplify element parsing by introducing parseFromParts method 
