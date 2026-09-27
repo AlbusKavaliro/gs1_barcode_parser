@@ -1,5 +1,5 @@
 ## [unreleased]
-* build: Enable `lints/recommended` rules
+* refactor: Enable `lints/recommended` rules and fix linting errors
 
 ## [1.2.1]
 * docs: Update homepage URL in pubspec

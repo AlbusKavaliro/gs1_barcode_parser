@@ -1,7 +1,7 @@
 import 'package:gs1_barcode_parser_plus/gs1_barcode_parser.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   final String barcode = '0150602641158911020414891725122811210101';
 
   group('Parse custom invalid barcode', () {
