@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names, reason: Legacy GS1 public API names kept for backward compatibility.
+
 import 'ai.dart';
 import 'code.dart';
 import 'code_parser.dart';
@@ -336,8 +338,7 @@ class GS1Barcode {
     final elem = elements.entries.fold(
       '',
       (String previousValue, element) =>
-          previousValue +
-          '${element.key} (${AI.applicationIdentifiers[element.key]!.dataTitle}): ${element.value.data},\n',
+          '$previousValue${element.key} (${AI.applicationIdentifiers[element.key]!.dataTitle}): ${element.value.data},\n',
     );
     return 'code = ${code.codeTitle},\ndata = {\n$elem}';
   }

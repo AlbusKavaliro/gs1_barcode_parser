@@ -1,3 +1,6 @@
+## [unreleased]
+* refactor: Enable `lints/recommended` rules and fix linting errors
+
 ## [1.2.1]
 * docs: Update homepage URL in pubspec
 * refactor: Rename private variables for owerCamelCase SAST

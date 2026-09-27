@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names, reason: Legacy GS1 public API names kept for backward compatibility.
+
 enum AIFormatType {
   FIXED_LENGTH,
   VARIABLE_LENGTH,
@@ -20,10 +22,10 @@ enum AIFormatType {
 /// Application Identifiers through web-browsers or on a mobile device.
 /// see https://www.gs1.org/standards/barcodes/application-identifiers?lang=en
 class AI {
-  static const _ALLOW_CHAR =
+  static const _allowChar =
       '[\u{0021}-\u{0022}\u{0025}-\u{002f}\u{0030}-\u{0039}\u{003a}-\u{003f}\u{0041}-\u{005a}\u{005f}\u{0061}-\u{007a}]';
 
-  static const _DATE_FIX_LENGTH = 6;
+  static const _dateFixLength = 6;
 
   final String _code;
 
@@ -78,7 +80,7 @@ class AI {
   int get fixLength {
     if (type == AIFormatType.FIXED_LENGTH) return _fixLength ?? 0;
     if (type == AIFormatType.FIXED_LENGTH_MEASURE) return _fixLength ?? 0;
-    if (type == AIFormatType.DATE) return _DATE_FIX_LENGTH;
+    if (type == AIFormatType.DATE) return _dateFixLength;
     return 0;
   }
 
@@ -112,13 +114,13 @@ class AI {
       code: '10',
       type: AIFormatType.VARIABLE_LENGTH,
       dataTitle: 'BATCH/LOT',
-      regExpString: '^10($_ALLOW_CHAR{0,20})\$',
+      regExpString: '^10($_allowChar{0,20})\$',
       description: 'Batch or lot number',
     ),
     '11': const AI(
       code: '11',
       type: AIFormatType.DATE,
-      fixLength: AI._DATE_FIX_LENGTH,
+      fixLength: AI._dateFixLength,
       dataTitle: 'PROD DATE',
       regExpString: r'^11(\d{6})$',
       description: 'Production date (YYMMDD)',
@@ -126,7 +128,7 @@ class AI {
     '12': const AI(
       code: '12',
       type: AIFormatType.DATE,
-      fixLength: AI._DATE_FIX_LENGTH,
+      fixLength: AI._dateFixLength,
       dataTitle: 'DUE DATE',
       regExpString: r'^12(\d{6})$',
       description: 'Due date (YYMMDD)',
@@ -134,7 +136,7 @@ class AI {
     '13': const AI(
       code: '13',
       type: AIFormatType.DATE,
-      fixLength: AI._DATE_FIX_LENGTH,
+      fixLength: AI._dateFixLength,
       dataTitle: 'PACK DATE',
       regExpString: r'^13(\d{6})$',
       description: 'Packaging date (YYMMDD)',
@@ -142,7 +144,7 @@ class AI {
     '15': const AI(
       code: '15',
       type: AIFormatType.DATE,
-      fixLength: AI._DATE_FIX_LENGTH,
+      fixLength: AI._dateFixLength,
       dataTitle: 'BEST BEFORE or BEST BY',
       regExpString: r'^15(\d{6})$',
       description: 'Best before date (YYMMDD)',
@@ -150,7 +152,7 @@ class AI {
     '16': const AI(
       code: '16',
       type: AIFormatType.DATE,
-      fixLength: AI._DATE_FIX_LENGTH,
+      fixLength: AI._dateFixLength,
       dataTitle: 'SELL BY',
       regExpString: r'^16(\d{6})$',
       description: 'Sell by date (YYMMDD)',
@@ -158,7 +160,7 @@ class AI {
     '17': const AI(
       code: '17',
       type: AIFormatType.DATE,
-      fixLength: AI._DATE_FIX_LENGTH,
+      fixLength: AI._dateFixLength,
       dataTitle: 'USE BY OR EXPIRY',
       description: 'Expiration date (YYMMDD)',
       regExpString: r'^17(\d{6})$',
@@ -175,28 +177,28 @@ class AI {
       code: '21',
       type: AIFormatType.VARIABLE_LENGTH,
       dataTitle: 'SERIAL',
-      regExpString: '^21($_ALLOW_CHAR{0,20})\$',
+      regExpString: '^21($_allowChar{0,20})\$',
       description: 'Serial number',
     ),
     '22': const AI(
       code: '22',
       type: AIFormatType.VARIABLE_LENGTH,
       dataTitle: 'CPV',
-      regExpString: '^22($_ALLOW_CHAR{0,20})\$',
+      regExpString: '^22($_allowChar{0,20})\$',
       description: 'Consumer product variant',
     ),
     '235': const AI(
       code: '235',
       type: AIFormatType.VARIABLE_LENGTH,
       dataTitle: 'TPX',
-      regExpString: '^235($_ALLOW_CHAR{0,28})\$',
+      regExpString: '^235($_allowChar{0,28})\$',
       description: 'Third Party Controlled, Serialised Extension of GTIN (TPX)',
     ),
     '240': const AI(
       code: '240',
       type: AIFormatType.VARIABLE_LENGTH,
       dataTitle: 'ADDITIONAL ID',
-      regExpString: '^240($_ALLOW_CHAR{0,30})\$',
+      regExpString: '^240($_allowChar{0,30})\$',
       description:
           'Additional product identification assigned by the manufacturer',
     ),
@@ -204,7 +206,7 @@ class AI {
       code: '241',
       type: AIFormatType.VARIABLE_LENGTH,
       dataTitle: 'CUST. PART NO.',
-      regExpString: '^241($_ALLOW_CHAR{0,30})\$',
+      regExpString: '^241($_allowChar{0,30})\$',
       description: 'Customer part number',
     ),
     '242': const AI(
@@ -218,35 +220,35 @@ class AI {
       code: '243',
       type: AIFormatType.VARIABLE_LENGTH,
       dataTitle: 'PCN',
-      regExpString: '^243($_ALLOW_CHAR{0,20})\$',
+      regExpString: '^243($_allowChar{0,20})\$',
       description: 'Packaging component number',
     ),
     '250': const AI(
       code: '250',
       type: AIFormatType.VARIABLE_LENGTH,
       dataTitle: 'SECONDARY SERIAL',
-      regExpString: '^250($_ALLOW_CHAR{0,30})\$',
+      regExpString: '^250($_allowChar{0,30})\$',
       description: 'Secondary serial number',
     ),
     '251': const AI(
       code: '251',
       type: AIFormatType.VARIABLE_LENGTH,
       dataTitle: 'REF. TO SOURCE',
-      regExpString: '^251($_ALLOW_CHAR{0,30})\$',
+      regExpString: '^251($_allowChar{0,30})\$',
       description: 'Reference to source entity',
     ),
     '253': const AI(
       code: '253',
       type: AIFormatType.VARIABLE_LENGTH,
       dataTitle: 'GDTI',
-      regExpString: '^253(\\d{13})($_ALLOW_CHAR{0,17})\$',
+      regExpString: '^253(\\d{13})($_allowChar{0,17})\$',
       description: 'Global Document Type Identifier (GDTI)',
     ),
     '254': const AI(
       code: '254',
       type: AIFormatType.VARIABLE_LENGTH,
       dataTitle: 'GLN EXTENSION COMPONENT',
-      regExpString: '^254($_ALLOW_CHAR{0,20})\$',
+      regExpString: '^254($_allowChar{0,20})\$',
       description: 'GLN extension component',
     ),
     '255': const AI(
@@ -1838,7 +1840,7 @@ class AI {
         type: AIFormatType.VARIABLE_LENGTH_WITH_ISO_CHARS,
         dataTitle: 'SHIP TO POST',
         description: 'Ship to / Deliver to postal code with ISO country code',
-        regExpString: '^421(\\d{3})($_ALLOW_CHAR{0,9})\$'),
+        regExpString: '^421(\\d{3})($_allowChar{0,9})\$'),
     '422': const AI(
         code: '422',
         type: AIFormatType.FIXED_LENGTH,
@@ -1857,48 +1859,48 @@ class AI {
         dataTitle: 'NHRN PZN',
         description:
             'National Healthcare Reimbursement Number (NHRN) - Germany PZN',
-        regExpString: '^710($_ALLOW_CHAR{0,20})\$'),
+        regExpString: '^710($_allowChar{0,20})\$'),
     '711': const AI(
         code: '711',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'NHRN CIP',
         description:
             'National Healthcare Reimbursement Number (NHRN) - France CIP',
-        regExpString: '^711($_ALLOW_CHAR{0,20})\$'),
+        regExpString: '^711($_allowChar{0,20})\$'),
     '712': const AI(
         code: '712',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'NHRN CN',
         description:
             'National Healthcare Reimbursement Number (NHRN) - Spain CN',
-        regExpString: '^712($_ALLOW_CHAR{0,20})\$'),
+        regExpString: '^712($_allowChar{0,20})\$'),
     '713': const AI(
         code: '713',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'NHRN DRN',
         description:
             'National Healthcare Reimbursement Number (NHRN) - Brasil DRN',
-        regExpString: '^713($_ALLOW_CHAR{0,20})\$'),
+        regExpString: '^713($_allowChar{0,20})\$'),
     '714': const AI(
         code: '714',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'NHRN AIM',
         description:
             'National Healthcare Reimbursement Number (NHRN) - Portugal AIM',
-        regExpString: '^714($_ALLOW_CHAR{0,20})\$'),
+        regExpString: '^714($_allowChar{0,20})\$'),
     '715': const AI(
         code: '715',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'NHRN NDC',
         description:
             'National Healthcare Reimbursement Number (NHRN) - United States of America NDC',
-        regExpString: '^715($_ALLOW_CHAR{0,20})\$'),
+        regExpString: '^715($_allowChar{0,20})\$'),
     '7031': const AI(
         code: '7031',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'PROCESSOR # 1',
         description: 'Number of processor with three-digit ISO country code',
-        regExpString: '^7031(\\d{3})($_ALLOW_CHAR{1,27})\$'),
+        regExpString: '^7031(\\d{3})($_allowChar{1,27})\$'),
     '8001': const AI(
         code: '8001',
         type: AIFormatType.FIXED_LENGTH_MEASURE,
@@ -1911,19 +1913,19 @@ class AI {
         code: '8002',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'CMT NO.',
-        regExpString: '^8002($_ALLOW_CHAR{0,20})\$',
+        regExpString: '^8002($_allowChar{0,20})\$',
         description: 'Cellular mobile telephone identifier'),
     '8003': const AI(
         code: '8003',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'GRAI',
-        regExpString: '^8003(0)(\\d{13})($_ALLOW_CHAR{0,20})\$',
+        regExpString: '^8003(0)(\\d{13})($_allowChar{0,20})\$',
         description: 'Global Returnable Asset Identifier (GRAI)'),
     '8004': const AI(
         code: '8004',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'GIAI',
-        regExpString: '^8004($_ALLOW_CHAR{0,30})\$',
+        regExpString: '^8004($_allowChar{0,30})\$',
         description: 'Global Individual Asset Identifier (GIAI)'),
     '8005': const AI(
         code: '8005',
@@ -1936,7 +1938,7 @@ class AI {
         code: '8007',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'IBAN',
-        regExpString: '^8007($_ALLOW_CHAR{0,34})\$',
+        regExpString: '^8007($_allowChar{0,34})\$',
         description: 'International Bank Account Number (IBAN)'),
     '8008': const AI(
         code: '8008',
@@ -1951,66 +1953,66 @@ class AI {
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'PRODUCT URL',
         description: 'Extended Packaging URL',
-        regExpString: '^8200($_ALLOW_CHAR{0,70})\$'),
+        regExpString: '^8200($_allowChar{0,70})\$'),
     '90': const AI(
         code: '90',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'INTERNAL',
         description: 'Information mutually agreed between trading partners',
-        regExpString: '^90($_ALLOW_CHAR{0,30})\$'),
+        regExpString: '^90($_allowChar{0,30})\$'),
     '91': const AI(
         code: '91',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'INTERNAL',
         description: 'Company internal information',
-        regExpString: '^91($_ALLOW_CHAR{0,90})\$'),
+        regExpString: '^91($_allowChar{0,90})\$'),
     '92': const AI(
         code: '92',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'INTERNAL',
         description: 'Company internal information',
-        regExpString: '^92($_ALLOW_CHAR{0,90})\$'),
+        regExpString: '^92($_allowChar{0,90})\$'),
     '93': const AI(
         code: '93',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'INTERNAL',
         description: 'Company internal information',
-        regExpString: '^93($_ALLOW_CHAR{0,90})\$'),
+        regExpString: '^93($_allowChar{0,90})\$'),
     '94': const AI(
         code: '94',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'INTERNAL',
         description: 'Company internal information',
-        regExpString: '^94($_ALLOW_CHAR{0,90})\$'),
+        regExpString: '^94($_allowChar{0,90})\$'),
     '95': const AI(
         code: '95',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'INTERNAL',
         description: 'Company internal information',
-        regExpString: '^95($_ALLOW_CHAR{0,90})\$'),
+        regExpString: '^95($_allowChar{0,90})\$'),
     '96': const AI(
         code: '96',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'INTERNAL',
         description: 'Company internal information',
-        regExpString: '^96($_ALLOW_CHAR{0,90})\$'),
+        regExpString: '^96($_allowChar{0,90})\$'),
     '97': const AI(
         code: '97',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'INTERNAL',
         description: 'Company internal information',
-        regExpString: '^97($_ALLOW_CHAR{0,90})\$'),
+        regExpString: '^97($_allowChar{0,90})\$'),
     '98': const AI(
         code: '98',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'INTERNAL',
         description: 'Company internal information',
-        regExpString: '^98($_ALLOW_CHAR{0,90})\$'),
+        regExpString: '^98($_allowChar{0,90})\$'),
     '99': const AI(
         code: '99',
         type: AIFormatType.VARIABLE_LENGTH,
         dataTitle: 'INTERNAL',
         description: 'Company internal information',
-        regExpString: '^99($_ALLOW_CHAR{0,90})\$'),
+        regExpString: '^99($_allowChar{0,90})\$'),
   };
 }

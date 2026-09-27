@@ -1,8 +1,7 @@
 import 'package:gs1_barcode_parser_plus/gs1_barcode_parser.dart';
-import 'package:gs1_barcode_parser_plus/src/exception.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   final String barcode8001 = '800111111111111111';
   final String barcode8002 = '8002+79605678797';
   final String barcode8003 = '800301111111111111XXX';

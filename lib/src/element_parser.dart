@@ -28,7 +28,7 @@ abstract class GS1ElementParser {
   double parseFloatingPoint(String numberPart, int numberOfDecimals) {
     final offset = numberPart.length - numberOfDecimals;
     final numberPartFloat =
-        numberPart.substring(0, offset) + '.' + numberPart.substring(offset);
+        '${numberPart.substring(0, offset)}.${numberPart.substring(offset)}';
     return double.parse(numberPartFloat);
   }
 
@@ -84,8 +84,8 @@ class GS1DateParser extends GS1ElementParser {
     );
   }
 
-  _year2ToYear4(int year) {
-    return year > 50 ? year + 1900 : year = year + 2000;
+  int _year2ToYear4(int year) {
+    return year > 50 ? year + 1900 : year + 2000;
   }
 }
 
@@ -128,8 +128,8 @@ class GS1DateTimeParser extends GS1ElementParser {
     );
   }
 
-  _year2ToYear4(int year) {
-    return year > 50 ? year + 1900 : year = year + 2000;
+  int _year2ToYear4(int year) {
+    return year > 50 ? year + 1900 : year + 2000;
   }
 }
 

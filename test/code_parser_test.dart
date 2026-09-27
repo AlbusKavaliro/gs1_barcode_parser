@@ -2,7 +2,7 @@ import 'package:gs1_barcode_parser_plus/src/code.dart';
 import 'package:gs1_barcode_parser_plus/src/code_parser.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   final codeParser = GS1PrefixCodeParser();
   final String gs1DataMatrix = ']d201034531200000111719112510ABCD1234';
   final String gs1QRCode = ']Q301034531200000111719112510ABCD1234';
